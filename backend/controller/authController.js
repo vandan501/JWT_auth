@@ -1,11 +1,41 @@
-const signup=(req,res,next)=>{
-const {name,email,password,confirmPassword}=req
-    return res.this.status(200).json({
-    success:true,
-    data:{
-        
-    }
-})
+const userModel = require('../model/userSchema');
+
+const signup = async (req, res, next) => {
+  const { name, email, password, confirmPassword } = req.body;
+  console.log(name, email, password, confirmPassword);
+
+if(!name,!email,!password,!confirmPassword)
+{
+  return res.status(400).json({
+    success:false,
+    message:'every field is required'
+  })
 }
 
-module.exports={signup};
+
+
+
+  try {
+    const userInfo = new userModel(req.body);
+    const result = await userInfo.save();
+
+    
+    return res.status(200).json({
+      success: true,
+      data: result
+    });
+  } catch (e) {
+    if (e.code === 11000) {
+      return res.status(400).json({
+        success: false,
+        message: 'An account already exists with the provided email id'
+      });
+    }
+    return res.status(400).json({
+      success: false,
+      message: e.message
+    });
+  }
+};
+
+module.exports = { signup };
