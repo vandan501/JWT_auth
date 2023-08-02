@@ -1,8 +1,7 @@
 const userModel = require('../model/userSchema');
 
-const signup = async (req, res, next) => {
+const signup = async (req, res) => {
   const { name, email, password, confirmPassword } = req.body;
-  console.log(name, email, password, confirmPassword);
 
 if(!name,!email,!password,!confirmPassword)
 {
@@ -11,10 +10,6 @@ if(!name,!email,!password,!confirmPassword)
     message:'every field is required'
   })
 }
-
-
-
-
   try {
     const userInfo = new userModel(req.body);
     const result = await userInfo.save();
